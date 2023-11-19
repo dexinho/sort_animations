@@ -11,7 +11,9 @@ const startAnimation = async (pairMoves) => {
     highlightMovingBlocks(blockOne, blockTwo);
     await delayMS(250);
     await moveBlocks(blockOne, blockTwo);
+    await delayMS(250);
     await switchBlocks(blockOne, blockTwo);
+    await delayMS(250);
   }
 };
 
