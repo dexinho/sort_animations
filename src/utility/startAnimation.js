@@ -8,6 +8,8 @@ const startAnimation = async (pairMoves) => {
   for (let i = 0; i < pairMoves.length; i += 2) {
     const blockOne = numberBlocks[pairMoves[i]];
     const blockTwo = numberBlocks[pairMoves[i + 1]];
+    highlightMovingBlocks(blockOne, blockTwo);
+    await delayMS(250);
     await moveBlocks(blockOne, blockTwo);
     await switchBlocks(blockOne, blockTwo);
   }
@@ -19,43 +21,59 @@ const clearAnimationTimeouts = () => {
   animationTimeouts.length = 0;
 };
 
-const moveBlocks = (blockOne, blockTwo) => {
-  const { animationTimeouts } = globalVar;
-  const computeStyleBlock = getComputedStyle(blockOne);
-  const computedStyleDiv = getComputedStyle(numbersDiv)
+const highlightMovingBlocks = (_blockOne, _blockTwo) => {
+  _blockOne.classList.add("highlight-blocks");
+  _blockTwo.classList.add("highlight-blocks");
+};
 
+const delayMS = (ms) => {
+  return new Promise((res) => {
+    setTimeout(() => {
+      res();
+    }, ms);
+  });
+};
+
+const moveBlocks = (_blockOne, _blockTwo) => {
+  const { animationTimeouts } = globalVar;
+  const computeStyleBlock = getComputedStyle(_blockOne);
+  const computedStyleDiv = getComputedStyle(numbersDiv);
   const blockWidth = parseInt(computeStyleBlock.width, 10);
-  const divGap = parseInt(computedStyleDiv.gap, 10)
+  const divGap = parseInt(computedStyleDiv.gap, 10);
+
   return new Promise((res) => {
     animationTimeouts.push(
       setTimeout(() => {
-        blockOne.classList.add("transform-transition");
-        blockTwo.classList.add("transform-transition");
-        blockOne.style.transform = `translate(-${blockWidth + divGap}px, 0)`;
-        blockTwo.style.transform = `translate(${blockWidth + divGap}px, 0)`;
+        _blockOne.classList.add("transform-transition");
+        _blockTwo.classList.add("transform-transition");
+        _blockOne.style.transform = `translate(-${blockWidth + divGap}px, 0)`;
+        _blockTwo.style.transform = `translate(${blockWidth + divGap}px, 0)`;
         res();
       }, 500)
     );
   });
 };
 
-const switchBlocks = (blockOne, blockTwo) => {
+const switchBlocks = (_blockOne, _blockTwo) => {
   const { animationTimeouts } = globalVar;
+
   return new Promise((res) => {
     animationTimeouts.push(
       setTimeout(() => {
-        blockOne.classList.remove("transform-transition");
-        blockTwo.classList.remove("transform-transition");
-        blockOne.style.transform = "translate(0, 0)";
-        blockTwo.style.transform = "translate(0, 0)";
-        [blockOne.innerText, blockTwo.innerText] = [
-          blockTwo.innerText,
-          blockOne.innerText,
+        _blockOne.classList.remove("transform-transition");
+        _blockTwo.classList.remove("transform-transition");
+        _blockOne.classList.remove("highlight-blocks");
+        _blockTwo.classList.remove("highlight-blocks");
+        _blockOne.style.transform = "none";
+        _blockTwo.style.transform = "none";
+        [_blockOne.innerText, _blockTwo.innerText] = [
+          _blockTwo.innerText,
+          _blockOne.innerText,
         ];
 
-        [blockOne.style.height, blockTwo.style.height] = [
-          blockTwo.style.height,
-          blockOne.style.height,
+        [_blockOne.style.height, _blockTwo.style.height] = [
+          _blockTwo.style.height,
+          _blockOne.style.height,
         ];
         res();
       }, 500)
