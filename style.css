@@ -4,13 +4,16 @@
   box-sizing: border-box;
 }
 
-#sort-algorithm-div,
-#numbers-div {
+#sort-algorithm-div {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
+  border: 2px solid red;
+  padding: 2rem;
+  margin: 1rem auto;
+  width: 700px;
 }
 
 #numbers-div {
@@ -19,7 +22,6 @@
   justify-content: center;
   flex-wrap: wrap;
   width: 100%;
-  border: 2px solid red;
   gap: 1rem;
 }
 
@@ -35,6 +37,10 @@
 
 .transform-transition {
   transition: transform 0.5s ease-in;
+}
+
+.highlight-blocks {
+  border: 5px solid red;
 }
 
 #bubble-sort-btn-div {
