@@ -6,12 +6,11 @@ import globalVar from "./globalVar.js";
 const attachAlgoBtnListeners = () => {
   algoBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      let moves;
       if (btn.id === "bubble-sort-btn") {
-        moves = bubbleSort();
+        globalVar.bubbleMoves = bubbleSort();
       }
       
-      startAnimation(moves)
+      startAnimation(globalVar.bubbleMoves)
     });
   });
 }

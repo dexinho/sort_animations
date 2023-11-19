@@ -1,14 +1,14 @@
 import globalVar from "./globalVar.js";
 
 const bubbleSort = () => {
-  const arrToSort = [...globalVar.initialArr];
-  const bubbleMoves = globalVar.bubbleMoves;
+  const { initialArr, bubbleMoves } = globalVar;
+  bubbleMoves.length = 0
 
-  for (let i = 0; i < arrToSort.length; i++) {
-    for (let j = 0; j < arrToSort.length - i - 1; j++) {
-      if (arrToSort[j] > arrToSort[j + 1]) {
+  for (let i = 0; i < initialArr.length; i++) {
+    for (let j = 0; j < initialArr.length - i - 1; j++) {
+      if (initialArr[j] > initialArr[j + 1]) {
         bubbleMoves.push(j + 1, j);
-        [arrToSort[j], arrToSort[j + 1]] = [arrToSort[j + 1], arrToSort[j]];
+        [initialArr[j], initialArr[j + 1]] = [initialArr[j + 1], initialArr[j]];
       }
     }
   }
