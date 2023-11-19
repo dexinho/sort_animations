@@ -4,16 +4,22 @@
   box-sizing: border-box;
 }
 
+:root {
+  --background-color: #24308F;
+  --number-block-color: #8F2430;
+  --number-highlight-color: #308F24;
+}
+
 #sort-algorithm-div {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
-  border: 2px solid red;
   padding: 2rem;
   margin: 1rem auto;
   width: 700px;
+  background-color: var(--background-color);
 }
 
 #numbers-div {
@@ -27,12 +33,13 @@
 
 .number-blocks {
   position: relative;
-  border: 2px solid blue;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   width: 50px;
   font-size: 2rem;
+  background-color: var(--number-block-color);
+  color: whitesmoke;
 }
 
 .transform-transition {
@@ -40,7 +47,7 @@
 }
 
 .highlight-blocks {
-  border: 5px solid red;
+  border: 5px solid var(--number-highlight-color);
 }
 
 #bubble-sort-btn-div {
