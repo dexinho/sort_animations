@@ -1,0 +1,58 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#sort-algorithm-div,
+#numbers-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#numbers-div {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  border: 2px solid red;
+  gap: 1rem;
+}
+
+.number-blocks {
+  position: relative;
+  border: 2px solid blue;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 50px;
+  font-size: 2rem;
+}
+
+.transform-transition {
+  transition: transform 0.5s ease-in;
+}
+
+#bubble-sort-btn-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.algo-btns {
+  height: 2rem;
+  width: 7rem;
+  font-size: 1.2rem;
+  transition: scale 0.1s ease-in;
+  cursor: pointer;
+}
+
+.algo-btns:hover {
+  scale: 1.1;
+}
