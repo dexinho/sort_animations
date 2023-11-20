@@ -1,26 +1,26 @@
-import ALGO_DATA from "./globalVar.js";
+import { ALGO_DATA } from "./globalVar.js";
 
 const insertSort = () => {
-  const { initialArr, insert } = ALGO_DATA;
+  const { initialArr, pairMoves } = ALGO_DATA;
 
   for (let i = 1; i < initialArr.length; i++) {
-    let moveCounter = 0
+    let moveCounter = 0;
     let currentElement = initialArr[i];
     let j = i - 1;
 
     while (j >= 0 && initialArr[j] > currentElement) {
       initialArr[j + 1] = initialArr[j];
-      insert.pairMoves.push(i - moveCounter, j)
+      pairMoves.push(i - moveCounter, j);
       j--;
-      moveCounter++
+      moveCounter++;
     }
 
     initialArr[j + 1] = currentElement;
   }
 
-  console.log(initialArr)
+  console.log(initialArr);
 
-  return insert.pairMoves;
+  return pairMoves;
 };
 
 export default insertSort;

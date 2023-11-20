@@ -1,4 +1,4 @@
-import ALGO_DATA from "./globalVar.js";
+import { ALGO_DATA, ANIMATION_DATA } from "./globalVar.js";
 import { numberBlocks } from "./getElements.js";
 import {
   numbersDiv,
@@ -8,49 +8,47 @@ import {
 import { clearIntervals, clearTimeouts } from "./clearAsync.js";
 import { pauseBtn, reverseBtn } from "./querySelectors.js";
 
-const startAnimation = async ({ pairMoves, currentMove, direction }) => {
-  const { animationSpeedMS, animationIntervals, animationTimeouts } = ALGO_DATA;
+const startAnimation = async ({ pairMoves, direction }) => {
+  const { animationSpeedMS, animationIntervals, animationTimeouts } =
+    ANIMATION_DATA;
+  const { currentMove } = ALGO_DATA;
 
   let index = currentMove;
+  let trackingVelocity = direction ? 1 : 0
   let blockOne = numberBlocks[pairMoves[index]];
   let blockTwo = numberBlocks[pairMoves[index + 1]];
   pauseBtn.style.display = "block";
-  // reverseBtn.style.display = "block"; 
+  reverseBtn.style.display = "block";
 
   console.log("current move", index);
 
   clearIntervals(animationIntervals);
   clearTimeouts(animationTimeouts);
   animateMove(blockOne, blockTwo);
-  startTrackingBar(pairMoves.length / 2, index / 2 + 1);
-
-  const currentAlgo =
-    ALGO_DATA.algoRunning === "bubble" ? ALGO_DATA.bubble : ALGO_DATA.insert;
+  startTrackingBar(pairMoves.length / 2, index / 2 + trackingVelocity);
 
   const animateInterval = setInterval(() => {
     index = direction ? index + 2 : index - 2;
-    currentAlgo.currentMove = index;
-
-    if (index < pairMoves.length && index > 0) {
+    ALGO_DATA.currentMove = index;
+    
+    if (index < pairMoves.length && index >= 0) {
       let blockOne = numberBlocks[pairMoves[index]];
-      let blockTwo = direction
-        ? numberBlocks[pairMoves[index + 1]]
-        : numberBlocks[pairMoves[index - 1]];
-
+      let blockTwo = numberBlocks[pairMoves[index + 1]]
+      
       animateMove(blockOne, blockTwo);
-      startTrackingBar(pairMoves.length / 2, index / 2 + 1);
+      startTrackingBar(pairMoves.length / 2, index / 2 + trackingVelocity);
     } else {
       pauseBtn.style.display = "none";
-      // reverseBtn.style.display = "none";
+      reverseBtn.style.display = "none";
       clearInterval(animateInterval);
     }
   }, animationSpeedMS);
 
-  ALGO_DATA.animationIntervals.push(animateInterval);
+  ANIMATION_DATA.animationIntervals.push(animateInterval);
 };
 
 const animateMove = async (blockOne, blockTwo) => {
-  const { animationSpeedMS } = ALGO_DATA;
+  const { animationSpeedMS } = ANIMATION_DATA;
   highlightMovingBlocks(blockOne, blockTwo);
   await delayMS(animationSpeedMS / 6);
   await moveBlocks(blockOne, blockTwo);
@@ -59,7 +57,7 @@ const animateMove = async (blockOne, blockTwo) => {
 };
 
 const startTrackingBar = (length, i) => {
-  const { animationSpeedMS } = ALGO_DATA;
+  const { animationSpeedMS } = ANIMATION_DATA;
   const trackingBarWidth = parseInt(getComputedStyle(trackingBar).width, 10);
   const trackerWidth = parseInt(
     getComputedStyle(trackingCurrentPosition).width,
@@ -79,7 +77,7 @@ const highlightMovingBlocks = (_blockOne, _blockTwo) => {
 };
 
 const delayMS = (ms) => {
-  const { animationTimeouts } = ALGO_DATA;
+  const { animationTimeouts } = ANIMATION_DATA;
   return new Promise((res) => {
     animationTimeouts.push(
       setTimeout(() => {
@@ -90,7 +88,7 @@ const delayMS = (ms) => {
 };
 
 const moveBlocks = (_blockOne, _blockTwo) => {
-  const { animationTimeouts, animationSpeedMS } = ALGO_DATA;
+  const { animationTimeouts, animationSpeedMS } = ANIMATION_DATA;
   const computeStyleBlock = getComputedStyle(_blockOne);
   const computedStyleDiv = getComputedStyle(numbersDiv);
   const blockWidth = parseInt(computeStyleBlock.width, 10);
@@ -110,7 +108,7 @@ const moveBlocks = (_blockOne, _blockTwo) => {
 };
 
 const switchBlocks = (_blockOne, _blockTwo) => {
-  const { animationTimeouts, animationSpeedMS } = ALGO_DATA;
+  const { animationTimeouts, animationSpeedMS } = ANIMATION_DATA;
 
   return new Promise((res) => {
     animationTimeouts.push(
