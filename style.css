@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  color: whitesmoke;
 }
 
 :root {
@@ -10,16 +11,27 @@
   --number-highlight-color: #308F24;
 }
 
+#container {
+  width: 99vw;
+  height: 99vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #sort-algorithm-div {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 4rem;
   padding: 2rem;
-  margin: 1rem auto;
   width: 700px;
   background-color: var(--background-color);
+}
+
+h1 {
+  color: #308F24;
 }
 
 #numbers-div {
@@ -37,7 +49,7 @@
   align-items: flex-end;
   justify-content: center;
   width: 50px;
-  font-size: 2rem;
+  font-size: 1.4rem;
   background-color: var(--number-block-color);
   color: whitesmoke;
 }
@@ -47,7 +59,7 @@
 }
 
 .highlight-blocks {
-  border: 5px solid var(--number-highlight-color);
+  outline: 5px solid var(--number-highlight-color);
 }
 
 #bubble-sort-btn-div {
@@ -59,13 +71,57 @@
 }
 
 .algo-btns {
-  height: 2rem;
-  width: 7rem;
+  height: 3rem;
+  width: 8rem;
   font-size: 1.2rem;
-  transition: scale 0.1s ease-in;
-  cursor: pointer;
+  background-color: #8F8324;
+  border: 0;
+  margin-top: 1rem;
 }
 
-.algo-btns:hover {
+button:hover {
   scale: 1.1;
+  cursor: pointer;
+  transition: scale 0.1s ease-in;
+}
+
+#tracker-div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12rem;
+}
+
+#tracking-bar {
+  position: relative;
+  border: 0;
+  background-color: var(--number-highlight-color);
+  width: 100%;
+  height: 4px;
+}
+
+#tracking-current-pos {
+  width: 30px;
+  height: 30px;
+  background-color: var(--number-block-color);
+  translate: 0 -50%;
+  border-radius: 100%;
+}
+
+#play-settings {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+#pause-btn, #reverse-btn {
+  width: 6rem;
+  height: 2rem;
+  font-size: 1.2rem;
+  color: var(--number-block-color);
+  display: none;
 }
