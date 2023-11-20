@@ -22,9 +22,9 @@ const playbackBtns = () => {
   });
 
   reverseBtn.addEventListener("click", () => {
-    [...numberBlocks].forEach((block) =>
-      block.classList.remove("highlight-blocks")
-    );
+    // [...numberBlocks].forEach((block) =>
+    //   block.classList.remove("highlight-blocks")
+    // );
     clearIntervals(ANIMATION_DATA.animationIntervals);
     clearTimeouts(ANIMATION_DATA.animationTimeouts);
     setTimeout(() => {

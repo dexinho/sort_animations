@@ -14,13 +14,14 @@ const startAnimation = async ({ pairMoves, direction }) => {
   const { currentMove } = ALGO_DATA;
 
   let index = currentMove;
-  let trackingVelocity = direction ? 1 : 0
+  let trackingVelocity = direction ? 1 : 0;
   let blockOne = numberBlocks[pairMoves[index]];
   let blockTwo = numberBlocks[pairMoves[index + 1]];
   pauseBtn.style.display = "block";
   reverseBtn.style.display = "block";
 
   console.log("current move", index);
+  console.log("direction", direction);
 
   clearIntervals(animationIntervals);
   clearTimeouts(animationTimeouts);
@@ -30,11 +31,13 @@ const startAnimation = async ({ pairMoves, direction }) => {
   const animateInterval = setInterval(() => {
     index = direction ? index + 2 : index - 2;
     ALGO_DATA.currentMove = index;
-    
+    console.log("current move", index);
+    console.log("direction", direction);
+
     if (index < pairMoves.length && index >= 0) {
       let blockOne = numberBlocks[pairMoves[index]];
-      let blockTwo = numberBlocks[pairMoves[index + 1]]
-      
+      let blockTwo = numberBlocks[pairMoves[index + 1]];
+
       animateMove(blockOne, blockTwo);
       startTrackingBar(pairMoves.length / 2, index / 2 + trackingVelocity);
     } else {
