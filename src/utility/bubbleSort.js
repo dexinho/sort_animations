@@ -6,10 +6,17 @@ const bubbleSort = () => {
 
   for (let i = 0; i < initialArr.length; i++) {
     for (let j = 0; j < initialArr.length - i - 1; j++) {
+      let change = false;
       if (initialArr[j] > initialArr[j + 1]) {
-        pairMoves.push(j + 1, j);
+        change = true;
         [initialArr[j], initialArr[j + 1]] = [initialArr[j + 1], initialArr[j]];
       }
+
+      pairMoves.push({
+        change,
+        start: j + 1,
+        end: j,
+      });
     }
   }
 
