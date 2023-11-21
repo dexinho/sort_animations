@@ -1,6 +1,6 @@
 import { algoBtns } from "./querySelectors.js";
 import bubbleSort from "./bubbleSort.js";
-import startAnimation from "./startAnimation.js";
+import animationSetup from "./animationSetup.js";
 import insertSort from "./insertSort.js";
 
 const attachAlgoBtnListeners = () => {
@@ -14,7 +14,7 @@ const attachAlgoBtnListeners = () => {
       }
 
       algoBtns.forEach(button => button.style.display = 'none')
-      startAnimation({ pairMoves, direction: true });
+      animationSetup({ pairMoves, direction: true });
     });
   });
 };
