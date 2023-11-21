@@ -1,5 +1,5 @@
 const ALGO_DATA = {
-  initialArr: [3, 1, 4, 6, 5, 9, 7, 2, 8],
+  initialArr: [7, 3, 4, 6, 5, 8, 9, 2, 1],
   currentMove: 0,
   pairMoves: [],
 };
