@@ -5,66 +5,79 @@ import {
   trackingBar,
   trackingCurrentPosition,
 } from "./querySelectors.js";
-import { clearTimeouts } from "./clearAsync.js";
 import { pauseBtn, reverseBtn } from "./querySelectors.js";
 
-const animationSetup = async ({ pairMoves, direction }) => {
-  const { animationTimeouts } = ANIMATION_DATA;
-
-  let trackingVelocity = direction ? 1 : 0;
+const animationSetup = async ({ pairMoves, isDirectionForward }) => {
+  const { delay, totalDelay } = ANIMATION_DATA;
+  let trackingDirection = isDirectionForward ? 1 : 0;
   pauseBtn.style.display = "block";
   reverseBtn.style.display = "block";
 
-  console.log(pairMoves.length)
-
-  clearTimeouts(animationTimeouts);
+  // setInterval(() => {
+  //   console.log(ANIMATION_DATA.isDirectionReversable);
+  // }, 10);
 
   const startAnimation = async () => {
-    let index = ALGO_DATA.currentMove;
-    if (index < pairMoves.length && index >= 0) {
-      let blockOne = numberBlocks[pairMoves[index].start];
-      let blockTwo = numberBlocks[pairMoves[index].end];
+    try {
+      ANIMATION_DATA.isAnimationInProgress = false;
+      let index = ALGO_DATA.currentMove;
+      if (index < pairMoves.length && index >= 0 && !ANIMATION_DATA.isAnimationPaused) {
+        let blockOne = numberBlocks[pairMoves[index].start];
+        let blockTwo = numberBlocks[pairMoves[index].end];
 
-      highlightMovingBlocks(blockOne, blockTwo);
-      updateTrackingBar(pairMoves.length, index + trackingVelocity);
-      await delayMS(500);
+        updateTrackingBar({
+          totalElements: pairMoves.length,
+          index: index + trackingDirection,
+          delay: totalDelay / pairMoves.length,
+        });
+        highlightMovingBlocks(blockOne, blockTwo);
+        await delayMS(delay);
+        if (pairMoves[index].change) {
+          await animateMove(blockOne, blockTwo);
+        } else removeHighlight(blockOne, blockTwo);
 
-      if (pairMoves[index].change) await animateMove(blockOne, blockTwo);
-      else removeHighlight(blockOne, blockTwo);
-
-      ALGO_DATA.currentMove = direction ? ++index : --index;
-      console.log(ALGO_DATA.currentMove)
-      ANIMATION_DATA.animationTimeouts.push(setTimeout(startAnimation, 500));
-    } else {
-      pauseBtn.style.display = "none";
-      reverseBtn.style.display = "none";
+        ALGO_DATA.currentMove = isDirectionForward ? ++index : --index;
+        ANIMATION_DATA.animationTimeouts.push(
+          setTimeout(startAnimation, delay)
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      ANIMATION_DATA.isAnimationInProgress = true;
     }
   };
+  startAnimation();
+};
 
-  ANIMATION_DATA.animationTimeouts.push(setTimeout(startAnimation, 250));
+const totalAnimationDelay = () => {
+  const { pairMoves } = ALGO_DATA;
+  pairMoves.forEach((move) => {
+    if (move.change) ANIMATION_DATA.totalDelay += ANIMATION_DATA.delay * 4;
+    else ANIMATION_DATA.totalDelay += ANIMATION_DATA.delay;
+  });
 };
 
 const animateMove = async (blockOne, blockTwo) => {
-  const { animationSpeedMS } = ANIMATION_DATA;
+  const { delay } = ANIMATION_DATA;
   await moveBlocks(blockOne, blockTwo);
-  await delayMS(500);
+  await delayMS(delay);
   await switchBlocks(blockOne, blockTwo);
   removeHighlight(blockOne, blockTwo);
 };
 
-const updateTrackingBar = (length, i) => {
-  const { animationSpeedMS } = ANIMATION_DATA;
+const updateTrackingBar = ({ totalElements, index, delay }) => {
   const trackingBarWidth = parseInt(getComputedStyle(trackingBar).width, 10);
   const trackerWidth = parseInt(
     getComputedStyle(trackingCurrentPosition).width,
     10
   );
-  trackingCurrentPosition.style.transition = `transform ${
-    animationSpeedMS / 1000
-  }s linear`;
-  trackingCurrentPosition.style.transform = `translate(${
-    (trackingBarWidth / length) * i - trackerWidth
-  }px, 0)`;
+  let moveBy = Math.floor((trackingBarWidth / totalElements) * index);
+  if (moveBy < 0 || moveBy + trackerWidth > trackingBarWidth)
+    moveBy = index ? trackingBarWidth - trackerWidth : 0;
+
+  trackingCurrentPosition.style.transition = `transform ${delay}ms linear`;
+  trackingCurrentPosition.style.transform = `translate(${moveBy}px, 0)`;
 };
 
 const highlightMovingBlocks = (_blockOne, _blockTwo) => {
@@ -77,6 +90,7 @@ const delayMS = (ms) => {
   return new Promise((res) => {
     animationTimeouts.push(
       setTimeout(() => {
+        ANIMATION_DATA.totalDelay += ms;
         res();
       }, ms)
     );
@@ -84,7 +98,7 @@ const delayMS = (ms) => {
 };
 
 const moveBlocks = (_blockOne, _blockTwo) => {
-  const { animationTimeouts, animationSpeedMS } = ANIMATION_DATA;
+  const { animationTimeouts, delay } = ANIMATION_DATA;
   const computeStyleBlock = getComputedStyle(_blockOne);
   const computedStyleDiv = getComputedStyle(numbersDiv);
   const blockWidth = parseInt(computeStyleBlock.width, 10);
@@ -97,14 +111,15 @@ const moveBlocks = (_blockOne, _blockTwo) => {
         _blockTwo.classList.add("transform-transition");
         _blockOne.style.transform = `translate(-${blockWidth + divGap}px, 0)`;
         _blockTwo.style.transform = `translate(${blockWidth + divGap}px, 0)`;
+        ANIMATION_DATA.totalDelay += delay;
         res();
-      }, animationSpeedMS / 4)
+      }, delay)
     );
   });
 };
 
 const switchBlocks = (_blockOne, _blockTwo) => {
-  const { animationTimeouts, animationSpeedMS } = ANIMATION_DATA;
+  const { animationTimeouts, delay } = ANIMATION_DATA;
 
   return new Promise((res) => {
     animationTimeouts.push(
@@ -122,8 +137,9 @@ const switchBlocks = (_blockOne, _blockTwo) => {
           _blockTwo.style.height,
           _blockOne.style.height,
         ];
+        ANIMATION_DATA.totalDelay += delay;
         res();
-      }, animationSpeedMS / 4)
+      }, delay)
     );
   });
 };
@@ -133,4 +149,4 @@ const removeHighlight = (_blockOne, _blockTwo) => {
   _blockTwo.classList.remove("highlight-blocks");
 };
 
-export default animationSetup;
+export { animationSetup, totalAnimationDelay };
